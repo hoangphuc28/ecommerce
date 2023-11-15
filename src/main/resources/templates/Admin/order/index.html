@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="Admin/admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+</head>
+<body>
+<div layout:fragment="content" style="background: white; color: black">
+
+    <div class="app-wrapper">
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+                <div class="row g-3 mb-4 align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <h1 class="app-page-title mb-0">Orders</h1>
+                        <h5 style="color: black; margin: 15px 0;" th:text="'Tổng số đơn hàng: '+ ${totalOrder}"></h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="page-utilities">
+                            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                                <form class="form-inline" th:action="@{/admin/order}" method="get">
+                                    <div class="form-group">
+                                        <label style="color: black" for="startDate">Từ ngày:</label>
+                                        <input type="date" class="form-control" id="startDate" name="startDate">
+                                    </div>
+                                    <div class="form-group mx-2">
+                                        <label style="color: black" for="endDate">Đến ngày:</label>
+                                        <input type="date" class="form-control" id="endDate" name="endDate">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="filterButton">Lọc</button>
+                                </form>
+                            </div><!--//row-->
+                        </div><!--//table-utilities-->
+                    </div><!--//col-auto-->
+                </div><!--//row-->
+
+                <nav id="orders-table-tab" class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+                    <a id="orders-all-tab" th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'all') ? 'active' : ''}" data-bs-toggle="tab" th:href="@{/admin/order}" role="tab" aria-controls="orders-all" aria-selected="true">All</a>
+                    <a id="orders-paid-tab" data-bs-toggle="tab"  th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'DELIVERING') ? 'active' : ''}" th:href="@{/admin/order?status=}+'DELIVERING'" role="tab" aria-controls="orders-paid" aria-selected="false">Delivering</a>
+                    <a id="orders-pending-tab" data-bs-toggle="tab"  th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'PAYMENT_PENDING') ? 'active' : ''}" th:href="@{/admin/order?status=}+'PAYMENT_PENDING'" role="tab" aria-controls="orders-pending" aria-selected="false">Pending</a>
+                    <a id="orders-cancelled-tab" data-bs-toggle="tab"  th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'CANCELED') ? 'active' : ''}" th:href="@{/admin/order?status=}+'CANCELED'" role="tab" aria-controls="orders-cancelled" aria-selected="false">Cancelled</a>
+                    <a id="orders-shipped-tab" data-bs-toggle="tab"  th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'SHIPPED') ? 'active' : ''}" th:href="@{/admin/order?status=}+'SHIPPED'" role="tab" aria-controls="orders-cancelled" aria-selected="false">Shipped</a>
+                </nav>
+                <div class="tab-content" id="orders-table-tab-content">
+                    <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+                        <div class="app-card app-card-orders-table shadow-sm mb-5">
+                            <div class="app-card-body">
+                                <div class="table-responsive">
+                                    <table class="table app-table-hover mb-0 text-left">
+                                        <thead>
+                                        <tr>
+                                            <th class="cell">Order</th>
+                                            <th class="cell">Customer</th>
+                                            <th class="cell">Date</th>
+                                            <th class="cell">Method</th>
+                                            <th class="cell">Status</th>
+                                            <th class="cell">Total</th>
+                                            <th class="cell"></th>
+                                            <th class="cell"></th>
+                                            <th class="cell"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="item : ${orders}">
+                                            <td class="cell" th:text="'#'+${item.id}"></td>
+                                            <td class="cell"><span class="truncate" th:text="${item.customer.getName()}"></span></td>
+                                            <td class="cell"><span th:text="${item.orderDate}"></span></td>
+                                            <td class="cell"><span th:text="${item.paymentMethod.getName()}"></span></td>
+                                            <td class="cell">
+                                                <span th:if="${item.status != null and item.status.toString() == 'DELIVERING'}" class="badge" style="background: #5a6268" th:text="${item.status}"></span>
+                                                <span th:if="${item.status != null and item.status.toString() == 'CANCELED'}" class="badge bg-danger" th:text="${item.status}"></span>
+                                                <span th:if="${item.status != null and item.status.toString() == 'PAYMENT_PENDING'}" class="badge bg-warning" th:text="${item.status}"></span>
+                                                <span th:if="${item.status != null and item.status.toString() == 'SHIPPED'}"  class="badge bg-success" th:text="${item.status}"></span>
+                                            </td>
+                                            <td class="cell" th:text="${item.totalAmount}"></td>
+                                            <td class="cell"><a class="btn-sm app-btn-secondary" th:href="@{/admin/order/detail/{id}(id=${item.getId()})}">View</a></td>
+                                            <td class="cell">
+                                                <form th:action="@{/admin/order/edit/shipped/{id}(id=${item.id})}" method="post">
+                                                <button type="submit" class="btn-sm app-btn-secondary" >Shipped</button>
+                                                </form>
+                                            </td>
+                                            <td class="cell">
+                                                <form th:action="@{/admin/order/edit/cancel/{id}(id=${item.id})}" method="post">
+                                                    <button type="submit" class="btn-sm app-btn-secondary" >Cancel</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--//table-responsive-->
+
+                            </div><!--//app-card-body-->
+                        </div><!--//app-card-->
+                    </div><!--//tab-pane-->
+                </div><!--//tab-content-->
+            </div><!--//container-fluid-->
+        </div><!--//app-content-->
+    </div><!--//app-wrapper-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script th:inline="javascript">
+        const changeStatus = (status) => {
+            console.log(status)
+        }
+    </script>
+</div>
+<!-- Display the list of orders here -->
+</body>
+</html>

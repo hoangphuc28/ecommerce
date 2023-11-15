@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="Admin/admin">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="app-wrapper">
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+<h1>Category List</h1>
+
+<table class="table">
+  <thead>
+  <tr >
+    <th style="color: black" scope="col">Id</th>
+    <th style="color: black" scope="col">Title</th>
+      <th scope="col">
+          <form style="display: flex;justify-content: flex-end" th:action="@{/admin/category/create}" th:object="${category}" method="post">
+              <input  th:field="*{name}" type="text" id="name" placeholder="Enter title" style="margin-right: 10px" class="form-control">
+              <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-text text-danger"></small>
+              <button type="submit" class="btn btn-success">Add</button>
+          </form>
+      </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="item : ${listCategory}">
+      <div th:if="${cateEdit.id != item.id}">
+        <th style="color: black" scope="row" th:text="${item.id}"></th>
+        <td style="color: black" th:text="${item.name}"></td>
+        <td>
+          <form th:action="@{/admin/category/delete/{id}(id=${item.id})}" method="post">
+              <button onclick="return confirm('Có muốn chắc là xóa hơm?')" class="btn btn-danger" type="submit">
+                  Delete
+              </button>
+          </form>
+        </td>
+        <td>
+          <form th:action="@{/admin/category/edit/{id}(id=${item.id})}" method="post">
+              <button class="btn btn-primary">Edit</button>
+          </form>
+
+        </td>
+      </div>
+      <div th:if="${cateEdit.id == item.id}">
+          <form style="display: flex;justify-content: flex-end" th:action="@{/admin/category/edit}" th:object="${cateEdit}" method="post">
+          <th scope="row" th:text="*{id}"></th>
+          <td>
+                    <input type="hidden" th:field="*{id}">
+                  <input  th:field="*{name}" type="text" id="name2" placeholder="Enter title" style="margin-right: 10px" class="form-control">
+                  <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-text text-danger"></small>
+          </td>
+              <td>
+                  <button type="submit" class="btn btn-success">Save</button>
+              </td>
+          </form>
+      </div>
+
+  </tr>
+  </tbody>
+</table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    .payment-success {
+      background-color: #ccffcc;
+      border: 1px solid #66ff66;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .payment-success h3 {
+      color: #33cc33;
+    }
+
+    .payment-success p {
+      color: #33cc33;
+      margin-bottom: 10px;
+    }
+    .btn-home {
+      background-color: #337ab7;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .btn-home:hover {
+      background-color: #23527c;
+    }
+
+
+  </style>
+</head>
+<body>
+<div class="payment-success">
+  <h3>Thanh toán thành công</h3>
+</div>
+<a th:href="@{/}" class="btn-home">Trở về trang chủ</a>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+      <h2>Cart</h2>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Cart</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ##### Breadcrumb Area End ##### -->
+
+  <!-- ##### Cart Area Start ##### -->
+  <div class="cart-area section-padding-0-100 clearfix">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="cart-table clearfix">
+            <table class="table table-responsive">
+              <thead>
+              <tr>
+                <th>Products</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>TOTAL</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:if="${check}" th:each="item : ${courses}">
+                <td class="cart_product_img">
+                  <a href="#"><img th:src="@{/img/}+${item.product.image}" alt="Product"></a>
+                  <h5 th:text="${item.getProduct.title}"></h5>
+                </td>
+                <td class="qty">
+                  <div class="quantity">
+<!--                    <input  class="qty-text" min="1" max="99" onchange="handleQuantityChange(this)" th:attr="data-item-id=${item.book.id}"  id="quantity" step="1" name="quantity"  th:value="${item.quantity}">-->
+                    <input min="1" th:max="${item.product.quantity}" onchange="handleQuantityChange(this)" th:attr="data-item-id=${item.getProduct.id}" id="quantity" type="number" th:value="${item.quantity}" class="form-control quantity-input">
+                  </div>
+                </td>
+                <td class="price"><span th:text="${item.getProduct.price}"></span></td>
+                <td class="total_price"><span th:text="${item.getProduct.price*item.quantity}"></span></td>
+                <td class="action">
+                  <form th:action="@{/cart/delete/{id}(id=${item.getProduct.id})}" method="Get">
+                    <button  type="submit" style="background: transparent; border: none"><i class="icon_close"></i></button>
+                  </form>
+                 </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <!-- Coupon Discount -->
+        <div class="col-12 col-lg-6">
+          <div class="coupon-discount mt-70">
+            <h5>COUPON DISCOUNT</h5>
+            <p>Coupons can be applied in the cart prior to checkout. Add an eligible item from the booth of the seller that created the coupon code to your cart. Click the green "Apply code" button to add the coupon to your order. The order total will update to indicate the savings specific to the coupon code entered.</p>
+            <form action="#" method="post">
+              <input type="text" name="coupon-code" placeholder="Enter your coupon code">
+              <button type="submit">APPLY COUPON</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Cart Totals -->
+        <div class="col-12 col-lg-6">
+          <div class="cart-totals-area mt-70">
+            <h5 class="title--">Cart Total</h5>
+            <div class="total d-flex justify-content-between">
+              <h5>Total</h5>
+              <h5 th:text="${total}"></h5>
+            </div>
+
+            <div class="checkout-btn">
+              <form th:action="@{/checkout}" method="post">
+                <input type="hidden" name="total" th:value="${total}" />
+                <button class="alazea-btn" type="submit" style="width: 100%">Checkout</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:inline="javascript">
+const handleQuantityChange = (a) => {
+  const itemId = a.getAttribute('data-item-id')
+  let quantity = a.value
+  let token = $("meta[name='_csrf']").attr("content");
+  let header = $("meta[name='_csrf_header']").attr("content");
+  if (quantity < 1) {
+    quantity = 1
+  }
+  if(parseInt(quantity) > parseInt(a.max)) {
+    quantity = a.max
+  }
+  $.ajax({
+          type: 'POST',
+          url: '/cart/update', // Điều hướng đến controller method để cập nhật dữ liệu
+          data: {
+            id:itemId /* Lấy ID của sản phẩm từ Thymeleaf expression */,
+            quantity: quantity
+          },
+          beforeSend: function (xhr) {
+              xhr.setRequestHeader(header, token);
+          },
+          success: function(data) {
+            // Xử lý kết quả nếu cần
+            window.location.href = '/cart';
+          },
+          error: function(error) {
+            // Xử lý lỗi nếu có
+            window.location.href = '/cart';
+
+          }
+        });
+}
+
+  </script>
+</table>
+</div>
+</body>
+</html>

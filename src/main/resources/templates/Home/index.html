@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <section class="hero-area">
+    <div class="hero-post-slides owl-carousel">
+
+      <!-- Single Hero Post -->
+      <div class="single-hero-post bg-overlay">
+        <!-- Post Image -->
+        <div class="slide-img bg-img" th:style="'background-image: url(' + @{/img/bg-img/1.jpg} + ');'"></div>
+
+        <div class="container h-100">
+          <div class="row h-100 align-items-center">
+            <div class="col-12">
+              <!-- Post Content -->
+              <div class="hero-slides-content text-center">
+                <h2>Plants exist in the weather and light rays that surround them</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque ante nec ipsum iaculis, ac iaculis ipsum porttitor. Vivamus cursus nisl lectus, id mattis nisl lobortis eu. Duis diam augue, dapibus ut dolor at, mattis maximus dolor.</p>
+                <div class="welcome-btn-group">
+                  <a href="#" class="btn alazea-btn mr-30">GET STARTED</a>
+                  <a href="#" class="btn alazea-btn active">CONTACT US</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single Hero Post -->
+      <div class="single-hero-post bg-overlay">
+        <!-- Post Image -->
+        <div class="slide-img bg-img" style="background-image: url(img/bg-img/2.jpg);"></div>
+        <div class="container h-100">
+          <div class="row h-100 align-items-center">
+            <div class="col-12">
+              <!-- Post Content -->
+              <div class="hero-slides-content text-center">
+                <h2>Plants exist in the weather and light rays that surround them</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque ante nec ipsum iaculis, ac iaculis ipsum porttitor. Vivamus cursus nisl lectus, id mattis nisl lobortis eu. Duis diam augue, dapibus ut dolor at, mattis maximus dolor.</p>
+                <div class="welcome-btn-group">
+                  <a href="#" class="btn alazea-btn mr-30">GET STARTED</a>
+                  <a href="#" class="btn alazea-btn active">CONTACT US</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <section class="our-services-area bg-gray section-padding-100-0">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <!-- Section Heading -->
+          <div class="section-heading text-center">
+            <h2>OUR SERVICES</h2>
+            <p>We provide the perfect service for you.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-between">
+        <div class="col-12 col-lg-5">
+          <div class="alazea-service-area mb-100">
+
+            <!-- Single Service Area -->
+            <div class="single-service-area d-flex align-items-center wow fadeInUp" data-wow-delay="100ms">
+              <!-- Icon -->
+              <div class="service-icon mr-30">
+                <img src="img/core-img/s1.png" alt="">
+              </div>
+              <!-- Content -->
+              <div class="service-content">
+                <h5>Plants Care</h5>
+                <p>In Aenean purus, pretium sito amet sapien denim moste consectet sedoni urna placerat sodales.service its.</p>
+              </div>
+            </div>
+
+            <!-- Single Service Area -->
+            <div class="single-service-area d-flex align-items-center wow fadeInUp" data-wow-delay="300ms">
+              <!-- Icon -->
+              <div class="service-icon mr-30">
+                <img src="img/core-img/s2.png" alt="">
+              </div>
+              <!-- Content -->
+              <div class="service-content">
+                <h5>Pressure Washing</h5>
+                <p>In Aenean purus, pretium sito amet sapien denim moste consectet sedoni urna placerat sodales.service its.</p>
+              </div>
+            </div>
+
+            <!-- Single Service Area -->
+            <div class="single-service-area d-flex align-items-center wow fadeInUp" data-wow-delay="500ms">
+              <!-- Icon -->
+              <div class="service-icon mr-30">
+                <img src="img/core-img/s3.png" alt="">
+              </div>
+              <!-- Content -->
+              <div class="service-content">
+                <h5>Tree Service &amp; Trimming</h5>
+                <p>In Aenean purus, pretium sito amet sapien denim moste consectet sedoni urna placerat sodales.service its.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="alazea-video-area bg-overlay mb-100">
+            <img src="img/bg-img/23.jpg" alt="">
+            <a href="http://www.youtube.com/watch?v=7HKoqNJtMTQ" class="video-icon">
+              <i class="fa fa-play" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="new-arrivals-products-area bg-gray section-padding-100">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <!-- Section Heading -->
+          <div class="section-heading text-center">
+            <h2>NEW ARRIVALS</h2>
+            <p>We have the latest products, it must be exciting for you</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="100ms">
+            <!-- Product Image -->
+            <div class="product-img">
+              <a href="shop-details.html"><img src="img/bg-img/9.jpg" alt=""></a>
+              <!-- Product Tag -->
+              <div class="product-tag">
+                <a href="#">Hot</a>
+              </div>
+              <div class="product-meta d-flex">
+                <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
+                <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+              </div>
+            </div>
+            <!-- Product Info -->
+            <div class="product-info mt-15 text-center">
+              <a href="shop-details.html">
+                <p>Cactus Flower</p>
+              </a>
+              <h6>$10.99</h6>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="200ms">
+            <!-- Product Image -->
+            <div class="product-img">
+              <a href="shop-details.html"><img src="img/bg-img/10.jpg" alt=""></a>
+              <div class="product-meta d-flex">
+                <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
+                <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+              </div>
+            </div>
+            <!-- Product Info -->
+            <div class="product-info mt-15 text-center">
+              <a href="shop-details.html">
+                <p>Cactus Flower</p>
+              </a>
+              <h6>$10.99</h6>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="300ms">
+            <!-- Product Image -->
+            <div class="product-img">
+              <a href="shop-details.html"><img src="img/bg-img/11.jpg" alt=""></a>
+              <div class="product-meta d-flex">
+                <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
+                <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+              </div>
+            </div>
+            <!-- Product Info -->
+            <div class="product-info mt-15 text-center">
+              <a href="shop-details.html">
+                <p>Cactus Flower</p>
+              </a>
+              <h6>$10.99</h6>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="400ms">
+            <!-- Product Image -->
+            <div class="product-img">
+              <a href="shop-details.html"><img src="img/bg-img/12.jpg" alt=""></a>
+              <!-- Product Tag -->
+              <div class="product-tag sale-tag">
+                <a href="#">Hot</a>
+              </div>
+              <div class="product-meta d-flex">
+                <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
+                <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+              </div>
+            </div>
+            <!-- Product Info -->
+            <div class="product-info mt-15 text-center">
+              <a href="shop-details.html">
+                <p>Cactus Flower</p>
+              </a>
+              <h6>$10.99</h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 text-center">
+          <a href="#" class="btn alazea-btn">View All</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

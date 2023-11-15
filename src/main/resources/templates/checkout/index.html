@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .payment {
+      display: flex;
+      justify-content: start;
+      border: 1px solid #2f5acf;
+      border-radius: 16px;
+      margin: 20px 0;
+      height: 90px;
+    }
+  </style>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+      <h2>Checkout</h2>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ##### Breadcrumb Area End ##### -->
+
+  <!-- ##### Checkout Area Start ##### -->
+  <div class="checkout_area mb-100">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-12 col-lg-7">
+          <div class="checkout_details_area clearfix">
+            <h5>Billing Details</h5>
+            <form th:action="@{/checkout/confirm}" th:object="${order}" method="POST">
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <label for="first_name">Your Name *</label>
+                  <input th:field="${order.customer.name}"  type="text" class="form-control" id="first_name" value="" required>
+                </div>
+                <div class="col-12 mb-4">
+                  <label for="email_address">Email Address *</label>
+                  <input th:field="${order.customer.email}" type="email" class="form-control" id="email_address" value="">
+                </div>
+                <div class="col-12 mb-4">
+                  <label for="phone_number">Phone Number *</label>
+                  <input  th:field="${order.customer.phone}" type="number" class="form-control" id="phone_number" min="0" value="">
+                </div>
+                <div class="col-12 mb-4">
+                  <label for="address">Address *</label>
+                  <input  th:field="${order.customer.address}" type="text" class="form-control" id="address" value="">
+                </div>
+                <div>
+                  <h2>Hình Thức Thanh Toán</h2>
+                  <div class="payment" style="display: flex; justify-content: start">
+                  <label style="display: flex; margin: 0; align-items: center">
+                    <input style="height: 30px; width: 10%" type="radio"  th:field="${order.paymentMethod.id}" th:value="1">
+                    <div style="width: 10%; margin: 0 25px">
+                      <img th:src="@{/img/shipcod.png}">
+                    </div>
+                    <p>Cod<br>
+                    Thanh toán khi nhận hàng
+                    </p>
+                  </label>
+
+                  </div>
+                  <div class="payment" style="display: flex; justify-content: start">
+                  <label style="display: flex; margin: 0; align-items: center">
+                    <input style="height: 30px; width: 10%"  type="radio"  th:field="${order.paymentMethod.id}" th:value="2">
+                    <div style="width: 10%; margin: 0 25px">
+
+                      <img  th:src="@{/img/logopaypal.png}">
+                    </div>
+                    <p style="margin:0">
+                    Ví Paypal
+                    </p>
+                  </label>
+                  </div>
+                </div>
+                <button  class="btn alazea-btn w-100" type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="checkout-content">
+            <h5 class="title--">Your Order</h5>
+            <div class="products">
+              <div class="products-data">
+                <h5>Products:</h5>
+                <div th:each="item: ${products}" class="single-products d-flex justify-content-between align-items-center">
+                  <p th:text="*{item.getProduct.title} + '  x'+ *{item.quantity}"></p>
+                  <h5 th:text="*{item.getProduct.price * item.quantity}"></h5>
+                </div>
+              </div>
+            </div>
+            <div class="shipping d-flex justify-content-between align-items-center">
+              <h5>Shipping</h5>
+              <h5 th:text="${ship}+'VND'"></h5>
+            </div>
+            <div class="order-total d-flex justify-content-between align-items-center">
+              <h5>Order Total</h5>
+              <h5 th:text="${total}"></h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
