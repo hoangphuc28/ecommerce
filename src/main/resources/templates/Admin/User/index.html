@@ -25,9 +25,7 @@
               </div><!--//row-->
             </div><!--//table-utilities-->
           </div><!--//col-auto-->
-
         </div><!--//row-->
-
         <nav id="orders-table-tab" class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
           <a id="orders-all-tab" th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'all') ? 'active' : ''}" data-bs-toggle="tab" th:href="@{/admin/users}" role="tab" aria-controls="orders-all" aria-selected="true">All</a>
         </nav>
@@ -43,6 +41,7 @@
                       <th class="cell">Name</th>
                       <th class="cell">Email</th>
                       <th class="cell">Phone</th>
+                      <th class="cell">Role</th>
                       <th class="cell"></th>
                     </tr>
                     </thead>
@@ -52,10 +51,18 @@
                       <td class="cell"><span class="truncate" th:text="${item.getName()}"></span></td>
                       <td class="cell"><span th:text="${item.getEmail()}"></span></td>
                       <td class="cell"><span th:text="${item.getPhone()}"></span></td>
+                      <td th:each="role : ${item.getRoles()}" class="cell"><span th:text="*{role.getName()}"></span></td>
                       <td class="cell">
-                        <form th:action="@{/admin/order/edit/cancel/{id}(id=${item.id})}" method="post">
+                        <div th:if="${!item.isBlock()}">
+                        <form th:action="@{/admin/user/block/{str}(str=${item.getEmail()})}" method="post">
                           <button type="submit" class="btn-sm app-btn-secondary" >Block</button>
                         </form>
+                        </div>
+                        <div th:if="${item.isBlock()}">
+                          <form th:action="@{/admin/user/unblock/{str}(str=${item.getEmail()})}" method="post">
+                            <button style="color: red" type="submit" class="btn-sm app-btn-secondary" >UnBlock</button>
+                          </form>
+                        </div>
                       </td>
                     </tr>
                     </tbody>

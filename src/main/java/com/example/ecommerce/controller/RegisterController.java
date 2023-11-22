@@ -65,7 +65,6 @@ public class RegisterController {
             model.addAttribute("checkError", "Must Contain At Least 1 Uppercase 1 Lowercase And 1 Numeric Character Minimum 6 Characters");
             return "user/verify";
         }
-        System.out.println(user.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (!userService.isUserExist(user.getEmail())) {
             userService.NewUser(user);

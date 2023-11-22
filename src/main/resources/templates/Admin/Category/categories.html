@@ -28,6 +28,7 @@
   </tr>
   </thead>
   <tbody>
+  <small th:text="${err}" class="form-text text-danger"></small>
   <tr th:each="item : ${listCategory}">
       <div th:if="${cateEdit.id != item.id}">
         <th style="color: black" scope="row" th:text="${item.id}"></th>

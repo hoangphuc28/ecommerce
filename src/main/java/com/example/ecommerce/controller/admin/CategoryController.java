@@ -23,6 +23,7 @@ public class CategoryController {
         model.addAttribute("cateEdit", new Category());
         model.addAttribute("category", new Category());
         model.addAttribute("listCategory", categoryService.getAllCategories());
+        model.addAttribute("err", "");
         return "Admin/Category/categories";
     }
     @PostMapping("/admin/category/create")
@@ -31,6 +32,8 @@ public class CategoryController {
             model.addAttribute("cateEdit", new Category());
             model.addAttribute("category", category);
             model.addAttribute("listCategory", categoryService.getAllCategories());
+            model.addAttribute("err", "");
+
             return "Admin/Category/categories";
         }
         categoryService.addCategory(category.getName());
@@ -38,7 +41,16 @@ public class CategoryController {
 
     }
     @PostMapping("/admin/category/delete/{id}")
-    public String deleteCategory(@PathVariable("id") Long id) {
+    public String deleteCategory(@PathVariable("id") Long id, Model model) {
+            var cate = categoryService.getCategory(id);
+            if(cate.getBooks().size()>0) {
+                model.addAttribute("cateEdit", new Category());
+                model.addAttribute("category", cate);
+                model.addAttribute("listCategory", categoryService.getAllCategories());
+                model.addAttribute("err", "Có sản phẩm thuộc thể loại này nên không thể xóa!");
+                return "Admin/Category/categories";
+
+            }
             categoryService.remove(id);
             return "redirect:/admin/category";
     }
@@ -48,6 +60,8 @@ public class CategoryController {
         model.addAttribute("cateEdit", cate);
         model.addAttribute("category", new Category());
         model.addAttribute("listCategory", categoryService.getAllCategories());
+        model.addAttribute("err", "");
+
         return "Admin/Category/categories";
     }
     @PostMapping("/admin/category/edit")
@@ -56,6 +70,8 @@ public class CategoryController {
             model.addAttribute("cateEdit", newCategory);
             model.addAttribute("category", new Category());
             model.addAttribute("listCategory", categoryService.getAllCategories());
+            model.addAttribute("err", "");
+
             return "Admin/Category/categories";
         }
         categoryService.updateCategory(newCategory);

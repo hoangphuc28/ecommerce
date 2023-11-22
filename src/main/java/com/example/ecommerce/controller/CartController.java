@@ -1,8 +1,10 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.model.CartProduct;
+import com.example.ecommerce.model.Coupon;
 import com.example.ecommerce.model.Product;
 import com.example.ecommerce.service.CartService;
+import com.example.ecommerce.service.CouponService;
 import com.example.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,20 +18,29 @@ public class CartController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CouponService couponService;
     @GetMapping("cart")
     private String index(Model model) {
-        var courses = cartService.getCartItems();
-        double total = 0;
-        for (var product : courses) {
-            total += product.getProduct().getPrice()*product.getQuantity();
+            System.out.println(cartService.getAppliedCoupon());
+        var products = cartService.getCartItems();
+        double subTotal = 0;
+        for (var product : products) {
+            subTotal += product.getProduct().getPrice()*product.getQuantity();
         }
-        if(courses.size() == 0) {
+        if(products.size() == 0) {
             model.addAttribute("check", false);
         } else {
             model.addAttribute("check", true);
         }
+        var appliedCoupon = Math.ceil((cartService.getAppliedCoupon().getDiscount()*subTotal)/100);
+        var total = subTotal - appliedCoupon;
+        model.addAttribute("appliedCoupon", appliedCoupon);
+        model.addAttribute("coupon", cartService.getAppliedCoupon());
+        model.addAttribute("subtotal", subTotal);
         model.addAttribute("total", total);
-        model.addAttribute("courses", courses);
+        model.addAttribute("courses", products);
         return "Cart/index";
     }
     @GetMapping("/cart/delete/{id}")
@@ -60,6 +71,18 @@ public class CartController {
         // Use the "id" and "quantity" parameters to update the cart item in the service
         cartService.update(id, quantity);
         return "Cart/index";
+    }
+
+    @PostMapping("/cart/coupon")
+    public String applyCoupon(Coupon c) {
+        var coupon = couponService.getCouponByCode(c.getCode());
+        System.out.println(coupon);
+        if (coupon != null) {
+            cartService.applyCoupon(coupon);
+        } else {
+            cartService.applyCoupon(new Coupon());
+        }
+        return "redirect:/cart";
     }
 
 }

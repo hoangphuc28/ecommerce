@@ -21,6 +21,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Transient
+    private String confirmPassword;
+
     public User(String email, String name, String phone) {
         this.email = email;
         this.name = name;
@@ -30,8 +33,10 @@ public class User {
     @Column(name = "password", length = 250, nullable = false)
     @NotBlank(message = "Password is required")
     private String password;
-    @Transient
-    private String confirmPassword;
+
+
+    @Column(name = "isBlock")
+    private boolean isBlock;
 
     @Column(name = "email", length = 50)
     @Size(max = 50, message = "Email must be less than 50 characters")

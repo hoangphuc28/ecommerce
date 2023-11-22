@@ -63,8 +63,8 @@
                     <input min="1" th:max="${item.product.quantity}" onchange="handleQuantityChange(this)" th:attr="data-item-id=${item.getProduct.id}" id="quantity" type="number" th:value="${item.quantity}" class="form-control quantity-input">
                   </div>
                 </td>
-                <td class="price"><span th:text="${item.getProduct.price}"></span></td>
-                <td class="total_price"><span th:text="${item.getProduct.price*item.quantity}"></span></td>
+                <td class="price"><span th:text="${#numbers.formatCurrency(item.getProduct().price)}"></span></td>
+                <td class="total_price"><span th:text="${#numbers.formatCurrency(item.getProduct.price*item.quantity)}"></span></td>
                 <td class="action">
                   <form th:action="@{/cart/delete/{id}(id=${item.getProduct.id})}" method="Get">
                     <button  type="submit" style="background: transparent; border: none"><i class="icon_close"></i></button>
@@ -84,8 +84,8 @@
           <div class="coupon-discount mt-70">
             <h5>COUPON DISCOUNT</h5>
             <p>Coupons can be applied in the cart prior to checkout. Add an eligible item from the booth of the seller that created the coupon code to your cart. Click the green "Apply code" button to add the coupon to your order. The order total will update to indicate the savings specific to the coupon code entered.</p>
-            <form action="#" method="post">
-              <input type="text" name="coupon-code" placeholder="Enter your coupon code">
+            <form th:object="${coupon}" th:action="@{/cart/coupon}" method="post">
+              <input th:field="${coupon.code}" type="text" name="coupon-code" placeholder="Enter your coupon code">
               <button type="submit">APPLY COUPON</button>
             </form>
           </div>
@@ -96,13 +96,22 @@
           <div class="cart-totals-area mt-70">
             <h5 class="title--">Cart Total</h5>
             <div class="total d-flex justify-content-between">
-              <h5>Total</h5>
-              <h5 th:text="${total}"></h5>
+              <h5>Subtotal</h5>
+              <h5 th:text="${#numbers.formatCurrency(subtotal)}"></h5>
             </div>
-
+            <div class="total d-flex justify-content-between">
+              <h5>Coupon</h5>
+              <h5 th:text="'-'+${#numbers.formatCurrency(appliedCoupon)}"></h5>
+            </div>
+            <div class="total d-flex justify-content-between">
+              <h5>Total</h5>
+              <h5 th:text="${#numbers.formatCurrency(total)}"></h5>
+            </div>
             <div class="checkout-btn">
               <form th:action="@{/checkout}" method="post">
                 <input type="hidden" name="total" th:value="${total}" />
+                <input type="hidden" name="coupon" th:value="${appliedCoupon}" />
+
                 <button class="alazea-btn" type="submit" style="width: 100%">Checkout</button>
               </form>
             </div>

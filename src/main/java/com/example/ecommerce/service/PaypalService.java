@@ -21,8 +21,8 @@ public class PaypalService {
         return Base64.getEncoder().encodeToString(auth.getBytes());
     }
     public String generateAccessToken() {
-        String apiKey = "AXfFfYQsM_Wdyomi9To5Cozx5aSxfuyl6XwVJ__YvtQqzLufcYnQH5Jr_pksY45M5qsgAI-8cpYgzTyd";
-        String secretKey = "ED75q26VgHhlPh3fBDKz_a7gaOXZ-W_oMeOIyKRsBw4C_CMEko8iw8vbDhLCJEk8NeDN1-kcnjCN2SSB";
+        String apiKey = "AebeC-DmDimgU0D7bOCorJNUBSo0a-IXOLm07H5NhDclVNwZsbEYfJoQqb_IaEJqA5Jiz4fX3pBHAoTJ";
+        String secretKey = "EA1Esn9SGjs220tvL_8vzsF3QdIi0YpyhbS_Beof89j40DKp5CDZ5HC-LjENOY0dVBZz_9U59EBKerGw";
         String auth = this.getAuth(
                 apiKey,
                 secretKey
@@ -138,6 +138,7 @@ public class PaypalService {
                 entity,
                 Object.class
         );
+        System.out.println(response);
 
         if (response.getStatusCode() == HttpStatus.CREATED) {
             return getApproveLink(response);

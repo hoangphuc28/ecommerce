@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="Admin/admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+</head>
+<body>
+<div layout:fragment="content" style="background: white; color: black">
+
+    <div class="app-wrapper">
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+                <div class="row g-3 mb-4 align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <h1 class="app-page-title mb-0">Coupons</h1>
+                    </div>
+                    <div class="col-auto">
+                        <div class="page-utilities">
+                            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                                <button type="submit" class="btn app-btn-primary">
+                                    <a style="color: white; text-decoration: none" th:href="@{/admin/coupons/add}">Add Coupon</a>
+                                </button>
+                            </div><!--//row-->
+                        </div><!--//table-utilities-->
+                    </div><!--//col-auto-->
+                </div><!--//row-->
+                <nav id="orders-table-tab" class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+                    <a id="orders-all-tab" th:class="'flex-sm-fill text-sm-center nav-link '+ ${(status == 'all') ? 'active' : ''}" data-bs-toggle="tab" th:href="@{/admin/users}" role="tab" aria-controls="orders-all" aria-selected="true">All</a>
+                </nav>
+                <div class="tab-content" id="orders-table-tab-content">
+                    <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+                        <div class="app-card app-card-orders-table shadow-sm mb-5">
+                            <div class="app-card-body">
+                                <div class="table-responsive">
+                                    <table class="table app-table-hover mb-0 text-left">
+                                        <thead>
+                                        <tr>
+                                            <th class="cell">Id</th>
+                                            <th class="cell">Code</th>
+                                            <th class="cell">Discount</th>
+                                            <th class="cell">Expiration Date</th>
+                                            <th class="cell">Status</th>
+                                            <th class="cell"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="item : ${coupons}">
+                                            <td class="cell" th:text="'#'+${item.id}"></td>
+                                            <td class="cell"><span class="truncate" th:text="${item.getCode()}"></span></td>
+                                            <td class="cell"><span th:text="${item.getDiscount()}"></span></td>
+                                            <td class="cell"><span th:text="${item.getExpirationDate()}"></span></td>
+                                            <td class="cell">
+                                                <span th:if="${item.isValid()}" th:text="Active"></span>
+                                                <span th:if="!${item.isValid()}" th:text="Expired"></span>
+
+                                            </td>
+                                            <td class="cell">
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--//table-responsive-->
+
+                            </div><!--//app-card-body-->
+                        </div><!--//app-card-->
+                    </div><!--//tab-pane-->
+                </div><!--//tab-content-->
+            </div><!--//container-fluid-->
+        </div><!--//app-content-->
+    </div><!--//app-wrapper-->
+
+</div>
+<!-- Display the list of orders here -->
+</body>
+</html>

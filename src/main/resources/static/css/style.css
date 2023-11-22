@@ -692,7 +692,10 @@ img {
 .single-product-area .product-img img {
     position: relative;
     z-index: 1;
-    width: 100%; }
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
 .single-product-area .product-img .product-tag a {
     background-color: #429edf;
     border-radius: 2px;

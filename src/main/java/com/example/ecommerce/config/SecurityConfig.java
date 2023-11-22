@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +20,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -31,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers(  "/css/**", "/js/**", "/fonts/**", "/img/**", "/login/**", "/logout/**", "/register/**", "/verify/**", "/forget/**", "/products/**" , "/", "/cart/**", "/checkout/**", "/products/detail/**", "/checkout/confirm/**").permitAll()
+                        .requestMatchers(  "/css/**", "/js/**", "/fonts/**", "/img/**", "/login/**", "/logout/**", "/register/**", "/verify/**", "/forget/**", "/products/**" , "/", "/cart/**", "/checkout/**", "/products/detail/**", "/checkout/confirm/**", "/orders/**", "order/detail/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority( "ADMIN")
                         .anyRequest().authenticated()
                 )

@@ -50,6 +50,8 @@
           <div class="checkout_details_area clearfix">
             <h5>Billing Details</h5>
             <form th:action="@{/checkout/confirm}" th:object="${order}" method="POST">
+              <input type="hidden" th:field="${order.totalAmount}"  th:value="${orderTotal}" required>
+
               <div class="row">
                 <div class="col-md-12 mb-4">
                   <label for="first_name">Your Name *</label>
@@ -108,19 +110,26 @@
                 <h5>Products:</h5>
                 <div th:each="item: ${products}" class="single-products d-flex justify-content-between align-items-center">
                   <p th:text="*{item.getProduct.title} + '  x'+ *{item.quantity}"></p>
-                  <h5 th:text="*{item.getProduct.price * item.quantity}"></h5>
+                  <h5 th:text="*{#numbers.formatCurrency(item.getProduct.price * item.quantity)}"></h5>
                 </div>
               </div>
             </div>
             <div class="shipping d-flex justify-content-between align-items-center">
               <h5>Shipping</h5>
-              <h5 th:text="${ship}+'VND'"></h5>
+              <h5 th:text="${#numbers.formatCurrency(ship)}"></h5>
             </div>
+            <div class="shipping d-flex justify-content-between align-items-center">
+              <h5>Coupon</h5>
+              <h5 th:text="'-'+${#numbers.formatCurrency(coupon)}"></h5>
+            </div>
+
             <div class="order-total d-flex justify-content-between align-items-center">
               <h5>Order Total</h5>
-              <h5 th:text="${total}"></h5>
+              <h5 th:text="${#numbers.formatCurrency(orderTotal)}"></h5>
             </div>
           </div>
+
+
         </div>
       </div>
     </div>

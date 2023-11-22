@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.Date;
 
@@ -24,8 +25,7 @@ public class Review {
     @Column(name = "content")
     private String content;
 
-    @Min(value = 1, message = "Rating must be at least 1")
-    @Max(value = 5, message = "Rating must be at most 5")
+    @Range(min = 1, max = 5, message = "Rating must be between 1 and 5")
     @Column(name = "rating")
     private int rating;
 

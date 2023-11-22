@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link layout:fragment="style" th:href="@{/css/admin.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Instructor</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="breadcrumb-area">
+        <!-- Top Breadcrumb Area -->
+        <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/23.jpg);">
+            <h2>Order Detail</h2>
+        </div>
+
+    </div>
+    <div class="">
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+
+            <h1 class="app-page-title mb-0">Order Detail</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Thông Tin Đơn Hàng</h5>
+                    <p>ID: <span th:text="${order.id}"></span></p>
+                    <p>Ngày Đặt Hàng: <span th:text="${order.orderDate}"></span></p>
+                    <p>Tổng Tiền: <span th:text="${order.totalAmount}"></span></p>
+                    <p>Khách Hàng: <span th:text="${order.customer.name}"></span></p>
+                    <p>Địa Chỉ Giao Hàng: <span th:text="${order.customer.address}"></span></p>
+                    <p>Số điện thoại: <span th:text="${order.customer.phone}"></span></p>
+                    <p>Phương Thức Thanh Toán: <span th:text="${order.paymentMethod.name}"></span></p>
+                    <p>Trạng Thái: <span th:text="${order.status}"></span></p>
+                    <p>Phí vận chuyển: <span th:text="30000"></span></p>
+                    <p>Mã giảm giá: <span th:if="${order.coupon!=null}" th:text="${order.coupon.code} + '('+${order.coupon.discount} +'%)'"></span></p>
+
+
+                </div>
+            </div>
+
+            <!-- Chi tiết sản phẩm trong đơn hàng -->
+            <div class="mt-4">
+                <h5>Chi Tiết Sản Phẩm</h5>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Mã Sản Phẩm</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Sử dụng thymeleaf để lặp qua danh sách sản phẩm trong đơn hàng -->
+                    <tr th:each="orderProduct : ${order.orderProducts}">
+                        <td>
+                            <img style="width: 65px" th:src="'/img/' +${orderProduct.product.getImage()}">
+                        </td>
+                        <td th:text="${orderProduct.product.id}"></td>
+                        <td th:text="${orderProduct.product.title}"></td>
+                        <td th:text="${orderProduct.quantity}"></td>
+                        <td th:text="${orderProduct.product.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn app-btn-primary">
+                <a style="color: white; text-decoration: none" href="javascript:history.back()">Go Back</a>
+            </button>
+        </div>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</div>
+<!-- Display the list of orders here -->
+</body>
+</html>

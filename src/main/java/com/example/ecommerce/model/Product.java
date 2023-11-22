@@ -19,6 +19,13 @@ import java.util.List;
 @Entity
 @Table(name="product")
 public class Product {
+
+    public int calculateTotalSoldQuantity() {
+        return orderProducts.stream()
+                .mapToInt(OrderProduct::getQuantity)
+                .sum();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

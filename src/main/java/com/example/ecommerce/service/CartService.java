@@ -1,6 +1,7 @@
 package com.example.ecommerce.service;
 
 import com.example.ecommerce.model.CartProduct;
+import com.example.ecommerce.model.Coupon;
 import com.example.ecommerce.model.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
@@ -12,8 +13,18 @@ import java.util.List;
 @SessionScope
 public class CartService {
     private List<CartProduct> cartItems;
+    private Coupon appliedCoupon;
+
+    public void applyCoupon(Coupon coupon) {
+        this.appliedCoupon = coupon;
+    }
+
+    public Coupon getAppliedCoupon() {
+        return appliedCoupon;
+    }
     public CartService() {
         cartItems = new ArrayList<>();
+        appliedCoupon = new Coupon();
     }
 
     public void addProduct(Product book) {
@@ -58,6 +69,7 @@ public class CartService {
         return cartItems;
     }
     public void removeAll() {
-          cartItems = new ArrayList<>();
+        cartItems = new ArrayList<>();
+        appliedCoupon = new Coupon();
     }
 }

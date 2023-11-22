@@ -77,13 +77,13 @@
               <div class="widget-desc">
                 <!-- Single Checkbox -->
                 <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <a  th:href="@{/products(page=__${currentPage+1}__) }">
+                    <a  th:href="@{/products(page=__${1}__) }">
                       <div th:class="${filterCategory == 0} ? active" style="cursor:pointer">All</div>
                     </a>
                 </div>
                 <!-- Single Checkbox -->
                 <div th:each="category : ${categories}" class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                  <a  th:href="@{/products(category=__${category.id}__) }">
+                  <a  th:href="@{/products(page=__${1}__,category=__${category.id}__) }">
                     <div th:class="${filterCategory == category.id} ? active" style="cursor: pointer; font-size: 16px;color: #707070;" th:text="${category.name}"></div>
                   </a>
 
@@ -98,55 +98,16 @@
               <div class="widget-desc">
 
                 <!-- Single Best Seller Products -->
-                <div class="single-best-seller-product d-flex align-items-center">
+                <div th:each="item : ${besSellerProducts}" class="single-best-seller-product d-flex align-items-center">
                   <div class="product-thumbnail">
-                    <a href="shop-details.html"><img src="img/bg-img/4.jpg" alt=""></a>
+                    <a th:href="@{/products/detail/{id}(id=${item.getId()})}"><img th:src="@{/img/}+${item.getImage()}" alt=""></a>
                   </div>
                   <div class="product-info">
-                    <a href="shop-details.html">Cactus Flower</a>
-                    <p>$10.99</p>
+                    <a th:href="@{/products/detail/{id}(id=${item.getId()})}" th:text="${item.getTitle()}">Cactus Flower</a>
+                    <p th:text="${item.getPrice()}">$10.99</p>
                     <div class="ratings">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                  </div>
-                </div>
+                      <p th:text="'Sold Quantity: ' + ${item.calculateTotalSoldQuantity()}">$10.99</p>
 
-                <!-- Single Best Seller Products -->
-                <div class="single-best-seller-product d-flex align-items-center">
-                  <div class="product-thumbnail">
-                    <a href="shop-details.html"><img src="img/bg-img/5.jpg" alt=""></a>
-                  </div>
-                  <div class="product-info">
-                    <a href="shop-details.html">Tulip Flower</a>
-                    <p>$11.99</p>
-                    <div class="ratings">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Single Best Seller Products -->
-                <div class="single-best-seller-product d-flex align-items-center">
-                  <div class="product-thumbnail">
-                    <a href="#"><img src="img/bg-img/34.jpg" alt=""></a>
-                  </div>
-                  <div class="product-info">
-                    <a href="shop-details.html">Recuerdos Plant</a>
-                    <p>$9.99</p>
-                    <div class="ratings">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
                     </div>
                   </div>
                 </div>
@@ -159,7 +120,7 @@
         <div class="col-12 col-md-8 col-lg-9">
           <div class="shop-products-area">
             <div class="row">
-              <div th:each="product : ${products}" th:if="${product.isPublish and product.quantity>0}" class="col-12 col-sm-6 col-lg-4">
+              <div th:each="product : ${products}" class="col-12 col-sm-6 col-lg-4">
                 <div class="single-product-area mb-50">
                   <div class="product-img" style=" pointer-events: none;">
                     <img th:src="@{/img/}+${product.image}" alt="plant">

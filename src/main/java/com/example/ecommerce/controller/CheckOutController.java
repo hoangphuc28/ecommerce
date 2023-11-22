@@ -18,6 +18,7 @@ import java.util.Date;
 
 @Controller
 public class CheckOutController {
+    private double ship = 30000;
     @Autowired
     private CartService cartService;
     @Autowired
@@ -46,15 +47,17 @@ public class CheckOutController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
     @PostMapping("/checkout")
-    public String checkout(Model model, @RequestParam String total) {
+    public String checkout(Model model, @RequestParam String total, @RequestParam String coupon) {
         model.addAttribute("products", cartService.getCartItems());
-        model.addAttribute("total", Double.parseDouble(total)+30000);
-        model.addAttribute("ship", 30000);
+        model.addAttribute("orderTotal", Double.parseDouble(total)+ship);
+        model.addAttribute("coupon", Double.parseDouble(coupon));
+        model.addAttribute("ship", ship);
         model.addAttribute("order", new Order());
         return "checkout/index";
     }
     @PostMapping("/checkout/confirm")
     public String checkoutConfirm(@ModelAttribute("order") Order o, Principal principal) throws MessagingException, IOException {
+        System.out.println(o.getTotalAmount());
         var products = cartService.getCartItems();
         PaymentMethod p = paymentMethodService.getPaymentMethodById(o.getPaymentMethod().getId());
         double total = 0;
@@ -67,6 +70,7 @@ public class CheckOutController {
         order.setPaymentMethod(p);
         order.setOrderDate(new Date());
         order.setCustomer(c);
+        order.setCoupon(cartService.getAppliedCoupon());
         order.setStatus(OrderStatus.DELIVERING);
         orderService.createOrder(order);
         for (var product : products) {
@@ -79,6 +83,7 @@ public class CheckOutController {
             product.getProduct().setQuantity(product.getProduct().getQuantity()-product.getQuantity());
             productService.update(product.getProduct());
         }
+        total = (total+ship)-(total*order.getCoupon().getDiscount())/100;
         order.setTotalAmount(BigDecimal.valueOf(total));
         orderService.updateOrder(order.getId(), order);
         if(p.getId() == 1) {
@@ -105,7 +110,8 @@ public class CheckOutController {
         var orderObject = orderService.getOrderById(Long.valueOf(orderId));
         orderObject.setStatus(OrderStatus.DELIVERING);
         orderService.updateOrder(orderObject.getId(), orderObject);
-        paypalService.capturePayment(token);
+        var url = paypalService.capturePayment(token);
+        System.out.println(url);
         cartService.removeAll();
         return "Notify/success-payment";
     }

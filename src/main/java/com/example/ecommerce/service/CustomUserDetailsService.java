@@ -1,6 +1,8 @@
 package com.example.ecommerce.service;
 
 
+
+import com.example.ecommerce.config.CustomUserNotFoundException;
 import com.example.ecommerce.model.Role;
 import com.example.ecommerce.model.User;
 import com.example.ecommerce.repo.RoleRespository;
@@ -30,8 +32,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     {
         User u = userRepository.getUserByEmail(email);
         if (u == null) {
-            throw new UsernameNotFoundException("Could not find user");
+            throw new CustomUserNotFoundException("User with email " + email + " not found");
         }
+        if(u.isBlock()) {
+            throw new CustomUserNotFoundException("User with email " + email + " not found");
+        }
+
         Set<GrantedAuthority> authorities = u.getRoles().stream()
                 .map((role) -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toSet());
@@ -62,5 +68,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         var usr = userRepository.getUserByEmail(u.getEmail());
         usr.setPassword(u.getPassword());
         userRepository.save(usr);
+    }
+    public void updateInforUser(User u) {
+        var user = userRepository.getUserByEmail(u.getEmail());
+        user.setName(u.getName());
+        user.setPhone(u.getPhone());
+        userRepository.save(user);
+
     }
 }

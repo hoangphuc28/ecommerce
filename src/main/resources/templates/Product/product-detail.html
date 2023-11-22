@@ -141,31 +141,35 @@
 
                 <div class="submit_a_review_area mt-50">
                   <h4>Submit A Review</h4>
-                  <form th:action="@{/review}" th:object="${review}" action="#" method="post">
+                  <form th:action="@{/review}" th:object="${review}" method="post">
                     <input th:field="${review.product.id}" type="hidden">
                     <div class="row">
                       <div class="col-12">
                         <div class="form-group d-flex align-items-center">
                           <span class="mr-15">Your Ratings:</span>
                           <div class="stars">
-                            <input th:field="${review.rating}" th:value="1" type="radio" name="star" class="star-1" id="star-1">
+                            <input th:field="*{rating}" th:value="1" type="radio" name="star" class="star-1" id="star-1">
                             <label class="star-1" for="star-1">1</label>
-                            <input th:field="${review.rating}" th:value="2" type="radio" name="star" class="star-2" id="star-2">
+                            <input th:field="*{rating}" th:value="2" type="radio" name="star" class="star-2" id="star-2">
                             <label class="star-2" for="star-2">2</label>
-                            <input th:field="${review.rating}" th:value="3" type="radio" name="star" class="star-3" id="star-3">
+                            <input th:field="*{rating}" th:value="3" type="radio" name="star" class="star-3" id="star-3">
                             <label class="star-3" for="star-3">3</label>
-                            <input th:field="${review.rating}" th:value="4" type="radio" name="star" class="star-4" id="star-4">
+                            <input th:field="*{rating}" th:value="4" type="radio" name="star" class="star-4" id="star-4">
                             <label class="star-4" for="star-4">4</label>
-                            <input th:field="${review.rating}" th:value="5" type="radio" name="star" class="star-5" id="star-5">
+                            <input th:field="*{rating}" th:value="5" type="radio" name="star" class="star-5" id="star-5">
                             <label class="star-5" for="star-5">5</label>
+                            <div th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" class="error-message"></div>
                             <span></span>
                           </div>
                         </div>
                       </div>
                       <div class="col-12">
                         <div class="form-group">
-                          <label for="comments">Comments</label>
-                          <textarea th:field="${review.content}" class="form-control" id="comments" rows="5" data-max-length="150"></textarea>
+                          <div th:if="${#fields.hasErrors('content')}" class="error-message">
+                            <span th:errors="${review.content}"></span>
+                          </div>
+                          <label for="content">Comments</label>
+                          <textarea th:onchange="handleChange()"  minlength="1" th:field="*{content}" class="form-control" id="content" rows="5" data-max-length="150"></textarea>
                         </div>
                       </div>
                       <div class="col-12">
@@ -182,6 +186,15 @@
       </div>
     </div>
   </section>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:inline="javascript">
+    function handleChange(review) {
+      // Use the review variable in your JavaScript logic
+      console.log('Review content:', review);
+      // Add more JavaScript logic here as needed
+    }
+
+  </script>
   <!-- ##### Single Product Details Area End ##### -->
 </div>
 

@@ -29,8 +29,8 @@ public class ProductService {
     public void update(Product newBook) {
         productRepo.save(newBook);
     }
-    public Page<Product> paginateCourse(Long category, Pageable page) {
-        Specification<Product> spec = Specification.where(null);
+    public Page<Product> paginateProduct(Long category, Pageable page) {
+        Specification<Product> spec = Specification.where(withQuantity()).and(withIsPublish());
         if (category != 0) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("category").get("id"), category)
@@ -38,5 +38,12 @@ public class ProductService {
         }
         return productRepo.findAll(spec,page);
     }
+    public static Specification<Product> withIsPublish() {
+        return (root, query, builder) -> builder.equal(root.get("isPublish"), true);
+    }
+    public static Specification<Product> withQuantity() {
+        return (root, query, builder) -> builder.greaterThan(root.get("quantity"), 0);
+    }
+
 
 }

@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -70,9 +71,10 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
     @DeleteMapping("/admin/product/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+        System.out.println(id);
         bookService.removeBook(id);
-        return "redirect:/admin/product";
+        return ResponseEntity.ok("Request successful");
     }
     @GetMapping("/admin/product/delete/{id}")
     public String getDelete() {
