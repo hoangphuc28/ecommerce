@@ -23,8 +23,16 @@ public class CartController {
     private CouponService couponService;
     @GetMapping("cart")
     private String index(Model model) {
-            System.out.println(cartService.getAppliedCoupon());
         var products = cartService.getCartItems();
+        double discountValue = 0.0;
+
+        if(cartService.getAppliedCoupon()!=null) {
+            model.addAttribute("coupon", cartService.getAppliedCoupon());
+            discountValue = cartService.getAppliedCoupon().getDiscount();
+        } else {
+            model.addAttribute("coupon", new Coupon());
+
+        }
         double subTotal = 0;
         for (var product : products) {
             subTotal += product.getProduct().getPrice()*product.getQuantity();
@@ -34,10 +42,9 @@ public class CartController {
         } else {
             model.addAttribute("check", true);
         }
-        var appliedCoupon = Math.ceil((cartService.getAppliedCoupon().getDiscount()*subTotal)/100);
+        var appliedCoupon = Math.ceil((discountValue*subTotal)/100);
         var total = subTotal - appliedCoupon;
         model.addAttribute("appliedCoupon", appliedCoupon);
-        model.addAttribute("coupon", cartService.getAppliedCoupon());
         model.addAttribute("subtotal", subTotal);
         model.addAttribute("total", total);
         model.addAttribute("courses", products);
@@ -80,7 +87,7 @@ public class CartController {
         if (coupon != null) {
             cartService.applyCoupon(coupon);
         } else {
-            cartService.applyCoupon(new Coupon());
+            cartService.applyCoupon(null);
         }
         return "redirect:/cart";
     }

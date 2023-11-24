@@ -24,7 +24,6 @@ public class CartService {
     }
     public CartService() {
         cartItems = new ArrayList<>();
-        appliedCoupon = new Coupon();
     }
 
     public void addProduct(Product book) {
@@ -70,6 +69,5 @@ public class CartService {
     }
     public void removeAll() {
         cartItems = new ArrayList<>();
-        appliedCoupon = new Coupon();
     }
 }

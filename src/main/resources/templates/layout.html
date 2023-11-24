@@ -48,7 +48,6 @@
                             <ul>
                                 <li><a th:href="@{/}">Home</a></li>
                                 <li><a  th:href="@{/products}">Shop</a></li>
-                                <li  sec:authorize="hasAnyAuthority('ADMIN')"><a class="header_option" th:href="@{/admin/overview}">Admin</a></li>
                                 <li><a th:href="@{/orders}">Orders</a></li>
                                 <li class="cart">
                                     <a style="font-size: 16px" th:href="@{/cart}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity"></span></span></a>
@@ -64,6 +63,8 @@
                                         <li>
                                             <a style="font-size: 16px" sec:authorize="isAuthenticated()" sec:logout th:href="@{/logout}">Logout</a>
                                         </li>
+                                        <li  sec:authorize="hasAnyAuthority('ADMIN')"><a class="header_option" th:href="@{/admin/overview}">Admin</a></li>
+
                                     </ul>
                                 </li>
                             </ul>

@@ -57,7 +57,6 @@ public class CheckOutController {
     }
     @PostMapping("/checkout/confirm")
     public String checkoutConfirm(@ModelAttribute("order") Order o, Principal principal) throws MessagingException, IOException {
-        System.out.println(o.getTotalAmount());
         var products = cartService.getCartItems();
         PaymentMethod p = paymentMethodService.getPaymentMethodById(o.getPaymentMethod().getId());
         double total = 0;
@@ -70,7 +69,11 @@ public class CheckOutController {
         order.setPaymentMethod(p);
         order.setOrderDate(new Date());
         order.setCustomer(c);
-        order.setCoupon(cartService.getAppliedCoupon());
+        double discountValue = 0.0;
+        if(cartService.getAppliedCoupon()!=null) {
+            order.setCoupon(cartService.getAppliedCoupon());
+            discountValue = cartService.getAppliedCoupon().getDiscount();
+        }
         order.setStatus(OrderStatus.DELIVERING);
         orderService.createOrder(order);
         for (var product : products) {
@@ -83,7 +86,7 @@ public class CheckOutController {
             product.getProduct().setQuantity(product.getProduct().getQuantity()-product.getQuantity());
             productService.update(product.getProduct());
         }
-        total = (total+ship)-(total*order.getCoupon().getDiscount())/100;
+        total = (total+ship)-(total*discountValue)/100;
         order.setTotalAmount(BigDecimal.valueOf(total));
         orderService.updateOrder(order.getId(), order);
         if(p.getId() == 1) {
