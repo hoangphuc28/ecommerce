@@ -35,9 +35,10 @@ public class ProductController {
     @Autowired
     private CustomUserDetailsService userService;
     @GetMapping("/products")
-    private String index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "0") Long category, Model model, Principal principal) {
+    private String index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "0") Long category, Model model, @RequestParam(defaultValue = "") String search) {
+        System.out.println(search);
         PageRequest pageable = PageRequest.of(page-1, 9);
-        Page<Product> products = productService.paginateProduct(category, pageable);
+        Page<Product> products = productService.paginateProduct(category, pageable, search);
         model.addAttribute("filterCategory", category);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("products", products.getContent());

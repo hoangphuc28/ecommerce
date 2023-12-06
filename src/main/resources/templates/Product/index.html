@@ -46,7 +46,12 @@
     background-image: url(img/bg-img/24.jpg);">
       <h2>Shop</h2>
     </div>
-
+    <div th:if="${notify}" class="alert alert-success alert-dismissible fade show" role="alert">
+      Update your cart successfully
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-4">
@@ -119,13 +124,13 @@
 
         <div class="col-12 col-md-8 col-lg-9">
           <div class="search-form">
-            <form  th:action="@{/orders}" method="get">
+            <form  th:action="@{/products}" method="get">
               <input style="    width: 80%;
     height: 45px;
     border: 1px solid #ebebeb;
     padding: 0 30px;
     border-radius: 5px;
-    font-size: 14px;" type="search" name="search" id="search" placeholder="Finding...">
+    font-size: 14px;" type="search" name="search" id="search" th:value="${param.search}" placeholder="Finding...">
               <button type="submit" class="d-none"></button>
             </form>
           </div>

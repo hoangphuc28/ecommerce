@@ -2,6 +2,7 @@ package com.example.ecommerce.controller.admin;
 
 import com.example.ecommerce.model.Product;
 import com.example.ecommerce.service.CategoryService;
+import com.example.ecommerce.service.CustomUserDetailsService;
 import com.example.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +34,9 @@ public class AdminProductController {
     private CategoryService categoryService;
     @Autowired
     private ResourceLoader resourceLoader;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @GetMapping("/admin/products")
     public String Home(Model model) {
@@ -57,7 +62,7 @@ public class AdminProductController {
         if(imageProduct != null && imageProduct.getSize() > 0)
         {
             try {
-                File saveFile = new ClassPathResource("static/img").getFile();
+                File saveFile = new ClassPathResource("src/main/resources/static/img").getFile();
                 String newImageFile = UUID.randomUUID() +  ".png";
                 Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + newImageFile);
                 Files.copy(imageProduct.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);

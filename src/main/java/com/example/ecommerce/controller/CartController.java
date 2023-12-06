@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CartController {
@@ -31,7 +32,6 @@ public class CartController {
             discountValue = cartService.getAppliedCoupon().getDiscount();
         } else {
             model.addAttribute("coupon", new Coupon());
-
         }
         double subTotal = 0;
         for (var product : products) {
@@ -57,18 +57,21 @@ public class CartController {
     }
 
     @PostMapping("/cart/{id}")
-    public String addToCart(@PathVariable Long id) {
+    public String addToCart(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Product product = productService.getProduct(id);
         if (product != null) {
             cartService.addProduct(product);
         }
+        redirectAttributes.addFlashAttribute("notify", true);
+
         return "redirect:/products";
     }
     @PostMapping("/cart/product/update")
-    public String updateCartProduct(CartProduct cartProduct) {
+    public String updateCartProduct(CartProduct cartProduct,  RedirectAttributes redirectAttributes) {
         Product p = productService.getProduct(cartProduct.getProduct().getId());
         cartProduct.setProduct(p);
         cartService.addUpdate(cartProduct);
+        redirectAttributes.addFlashAttribute("notify", true);
 
         return "redirect:/products/detail/"+cartProduct.getProduct().getId();
     }
@@ -81,11 +84,15 @@ public class CartController {
     }
 
     @PostMapping("/cart/coupon")
-    public String applyCoupon(Coupon c) {
+    public String applyCoupon(Coupon c, RedirectAttributes redirectAttributes) {
         var coupon = couponService.getCouponByCode(c.getCode());
-        System.out.println(coupon);
+
         if (coupon != null) {
-            cartService.applyCoupon(coupon);
+            if(coupon.isValid()) {
+                cartService.applyCoupon(coupon);
+            } else {
+                redirectAttributes.addFlashAttribute("validCoupon", false);
+            }
         } else {
             cartService.applyCoupon(null);
         }

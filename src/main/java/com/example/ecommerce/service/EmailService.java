@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 
 @Service
 public class EmailService {
@@ -28,7 +29,7 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
         // Load the email template
-        String emailTemplate = getEmailTemplate();
+        String emailTemplate = getEmailTemplate("src/main/resources/templates/mail/verify.html");
 
         // Replace placeholders in the template with the actual content
         String processedTemplate = emailTemplate.replace("[[content]]", text);
@@ -44,7 +45,7 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
         // Load the email template
-        String emailTemplate = getEmailTemplate();
+        String emailTemplate = getEmailTemplate("src/main/resources/templates/mail/order.html");
 
         // Replace placeholders in the template with the actual content
         String processedTemplate = emailTemplate.replace( "[[content]]",  order.getTotalAmount().toString());
@@ -55,8 +56,28 @@ public class EmailService {
 
         mailSender.send(message);
     }
-    public String getEmailTemplate() throws IOException {
-        Path path = Paths.get("src/main/resources/templates/mail/verify.html");
+    public void sendCancelOrder(String to, String subject, Order order) throws MessagingException, IOException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+        // Load the email template
+        String emailTemplate = getEmailTemplate("src/main/resources/templates/mail/cancelOrder.html");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String processedTemplate = emailTemplate
+                .replace( "[[Customer Name]]",  order.getCustomer().getName())
+                .replace( "[[Order Number]]",  order.getId().toString())
+                .replace( "[[Order Date]]",  dateFormat.format(order.getOrderDate()))
+                .replace( "[[Total Amount]]",  order.getTotalAmount().toString())
+                .replace( "[[Cancellation Reason]]",  order.getCancellationReason());
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(processedTemplate, true);
+
+        mailSender.send(message);
+    }
+    public String getEmailTemplate(String src) throws IOException {
+        Path path = Paths.get(src);
         return Files.readString(path);
     }
 }

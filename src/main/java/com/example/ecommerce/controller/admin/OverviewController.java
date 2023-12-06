@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class OverviewController {
@@ -39,6 +42,8 @@ public class OverviewController {
         model.addAttribute("totalProducts", totalProducts);
         model.addAttribute("totalSales", totalSales);
         model.addAttribute("totalOrders", totalOrders);
+        model.addAttribute("analyzeByMonth", orderService.calculateAmountByMonth());
+        model.addAttribute("analyzeByQuarter", orderService.calculateAmountByQuarter());
 
         return "Admin/Overview/index";
     }
@@ -49,4 +54,17 @@ public class OverviewController {
         }
         return totalProducts;
     }
+//    public Map<String, BigDecimal> analyzeByCondition(int condition) {
+//        System.out.println(new Date().getYear());
+//        Map<String, BigDecimal> res = new HashMap<>();
+//        if(condition == 1) {
+//            for(int i = 1; i <= 12; i++) {
+//                res.put(String.valueOf(i), orderService.calculateTotalAmountByMonth(new Date().getYear(), i));
+//            }
+//        } else {
+//            for(int i = 1; i <= 7; i++) {
+//                res.put(String.valueOf(i), orderService.calculateTotalAmountByMonth(new Date().getYear(), i));
+//            }
+//        }
+//    }
 }

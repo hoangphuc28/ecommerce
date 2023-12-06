@@ -44,6 +44,9 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "coupon_id")
-    private Coupon coupon; // Added this line
+    private Coupon coupon;
+
+    @Column(name = "cancellation_reason") // Added this line
+    private String cancellationReason; // Added this line
 }
 

@@ -49,31 +49,39 @@
         <div class="col-12 col-lg-7">
           <div class="checkout_details_area clearfix">
             <h5>Billing Details</h5>
-            <form th:action="@{/checkout/confirm}" th:object="${order}" method="POST">
+            <form id="checkoutForm" th:action="@{/checkout/confirm}" th:object="${order}" method="POST">
               <input type="hidden" th:field="${order.totalAmount}"  th:value="${orderTotal}" required>
-
               <div class="row">
                 <div class="col-md-12 mb-4">
                   <label for="first_name">Your Name *</label>
                   <input th:field="${order.customer.name}"  type="text" class="form-control" id="first_name" value="" required>
+                  <small  id="nameError"  class="form-text text-danger"></small>
+
                 </div>
                 <div class="col-12 mb-4">
                   <label for="email_address">Email Address *</label>
-                  <input th:field="${order.customer.email}" type="email" class="form-control" id="email_address" value="">
+                  <input th:field="${order.customer.email}" type="email" class="form-control" id="email_address" value="" required>
+                  <small  id="emailError"  class="form-text text-danger"></small>
+
                 </div>
                 <div class="col-12 mb-4">
                   <label for="phone_number">Phone Number *</label>
-                  <input  th:field="${order.customer.phone}" type="number" class="form-control" id="phone_number" min="0" value="">
+                  <input  th:field="${order.customer.phone}" type="number" class="form-control" id="phone_number" min="0" value="" required>
+                  <small id="phoneError"  class="form-text text-danger"></small>
+
                 </div>
+
                 <div class="col-12 mb-4">
                   <label for="address">Address *</label>
-                  <input  th:field="${order.customer.address}" type="text" class="form-control" id="address" value="">
+                  <input  th:field="${order.customer.address}" type="text" class="form-control" id="address" value="" required>
+                  <small  id="addressError"  class="form-text text-danger"></small>
+
                 </div>
                 <div>
                   <h2>Hình Thức Thanh Toán</h2>
                   <div class="payment" style="display: flex; justify-content: start">
                   <label style="display: flex; margin: 0; align-items: center">
-                    <input style="height: 30px; width: 10%" type="radio"  th:field="${order.paymentMethod.id}" th:value="1">
+                    <input id="cod" required style="height: 30px; width: 10%" type="radio"  th:field="${order.paymentMethod.id}" th:value="1">
                     <div style="width: 10%; margin: 0 25px">
                       <img th:src="@{/img/shipcod.png}">
                     </div>
@@ -85,7 +93,7 @@
                   </div>
                   <div class="payment" style="display: flex; justify-content: start">
                   <label style="display: flex; margin: 0; align-items: center">
-                    <input style="height: 30px; width: 10%"  type="radio"  th:field="${order.paymentMethod.id}" th:value="2">
+                    <input id="paypal" required style="height: 30px; width: 10%"  type="radio"  th:field="${order.paymentMethod.id}" th:value="2">
                     <div style="width: 10%; margin: 0 25px">
 
                       <img  th:src="@{/img/logopaypal.png}">
@@ -95,8 +103,10 @@
                     </p>
                   </label>
                   </div>
+                  <small  id="paymentMethodError"  class="form-text text-danger"></small>
                 </div>
-                <button  class="btn alazea-btn w-100" type="submit">Submit</button>
+
+                <button type="button" th:onclick="validateForm()"  class="btn alazea-btn w-100">Submit</button>
               </div>
             </form>
           </div>
@@ -133,7 +143,64 @@
         </div>
       </div>
     </div>
+    <script>
+      document.getElementById("cod").setAttribute("checked","checked")
+      function validateForm() {
+        let check = true;
+        let phoneNumberRegex = /^(84|0[3|5|7|8|9])+([0-9]{8})$/;
+        let phone = document.getElementById('phone_number').value;
+        document.getElementById('phoneError').innerHTML = '';
+        if (!phoneNumberRegex.test(phone)) {
+          document.getElementById('phoneError').innerHTML = 'Invalid phone number';
+          check = false
+        }
+
+        // Validate Name
+        let name = document.getElementById('first_name').value;
+        document.getElementById('nameError').innerHTML = '';
+        if (!name.trim()) {
+          check = false
+
+          document.getElementById('nameError').innerHTML = 'Name is required';
+        }
+
+        // Validate Email
+        let email = document.getElementById('email_address').value;
+        document.getElementById('emailError').innerHTML = '';
+        if (!email.trim()) {
+          check = false
+
+          document.getElementById('emailError').innerHTML = 'Email is required';
+        }
+
+        // Validate Address
+        let address = document.getElementById('address').value;
+        document.getElementById('addressError').innerHTML = '';
+        if (!address.trim()) {
+          check = false
+
+          document.getElementById('addressError').innerHTML = 'Address is required';
+        }
+
+        // // Validate Payment Method
+        // let paymentMethod = document.querySelector('input[name="order.paymentMethod.id"]:checked');
+        // document.getElementById('paymentMethodError').innerHTML = '';
+        // if (!paymentMethod) {
+        //   check = false
+        //
+        //   document.getElementById('paymentMethodError').innerHTML = 'Payment method is required';
+        // }
+
+        if(check)
+          document.getElementById('checkoutForm').submit();
+        else return;
+      }
+
+
+    </script>
   </div>
+
+
 </div>
 </body>
 </html>

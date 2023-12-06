@@ -23,6 +23,8 @@
         <p>Số điện thoại: <span th:text="${order.customer.phone}"></span></p>
         <p>Phương Thức Thanh Toán: <span th:text="${order.paymentMethod.name}"></span></p>
         <p>Trạng Thái: <span th:text="${order.status}"></span></p>
+        <p th:if="${order.cancellationReason != null}">Lý Do Hủy: <span th:text="${order.cancellationReason}"></span></p>
+
         <p>Phí vận chuyển: <span th:text="30000"></span></p>
         <p>Mã giảm giá: <span th:if="${order.coupon!=null}" th:text="${order.coupon.code} + '('+${order.coupon.discount} +'%)'"></span></p>
 

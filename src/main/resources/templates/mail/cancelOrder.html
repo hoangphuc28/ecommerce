@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Cancellation Confirmation</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;">
+
+<div class="container mt-4">
+  <div class="jumbotron text-center">
+    <h1 class="display-4" style="color: #e74c3c;">Order Cancellation Confirmation</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <p class="card-text">Dear [[Customer Name]],</p>
+      <p class="card-text">We regret to inform you that your order has been canceled. Below are the details:</p>
+
+      <table class="table table-bordered">
+        <tr>
+          <th scope="row">Order Number:</th>
+          <td>[[Order Number]]</td>
+        </tr>
+        <tr>
+          <th scope="row">Order Date:</th>
+          <td>[[Order Date]]</td>
+        </tr>
+        <tr>
+          <th scope="row">Total Amount:</th>
+          <td>[[Total Amount]]</td>
+        </tr>
+        <tr>
+          <th scope="row">Cancellation Reason:</th>
+          <td>[[Cancellation Reason]]</td>
+        </tr>
+      </table>
+
+      <p class="card-text">We apologize for any inconvenience caused. If you have any questions or concerns, please feel free to contact our customer support.</p>
+      <p class="card-text">Thank you for choosing our service.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

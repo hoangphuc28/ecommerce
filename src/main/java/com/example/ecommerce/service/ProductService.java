@@ -29,11 +29,21 @@ public class ProductService {
     public void update(Product newBook) {
         productRepo.save(newBook);
     }
-    public Page<Product> paginateProduct(Long category, Pageable page) {
+    public Page<Product> paginateProduct(Long category, Pageable page, String searchQuery) {
         Specification<Product> spec = Specification.where(withQuantity()).and(withIsPublish());
         if (category != 0) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("category").get("id"), category)
+            );
+        }
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            String likePattern = "%" + searchQuery + "%";
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(root.get("title"), likePattern),
+                            criteriaBuilder.like(root.get("description"), likePattern)
+                            // Add more fields as needed for your search
+                    )
             );
         }
         return productRepo.findAll(spec,page);

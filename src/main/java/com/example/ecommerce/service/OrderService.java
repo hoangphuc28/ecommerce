@@ -6,9 +6,12 @@ import com.example.ecommerce.repo.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.IsoFields;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -57,8 +60,64 @@ public class OrderService {
         return null; // Return null if the order with the given ID does not exist
     }
 
-    // Delete an order by its ID
-    public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
+
+    public  Map<String, BigDecimal> calculateAmountByMonth() {
+        var orders = orderRepository.findAll();
+        Map<String, BigDecimal> result = new HashMap<>();
+
+        // Group orders by month
+        Map<String, List<Order>> ordersByMonth = orders.stream()
+                .collect(Collectors.groupingBy(order -> getMonthYear(order.getOrderDate())));
+
+        // Calculate total amount for each month
+        for (Map.Entry<String, List<Order>> entry : ordersByMonth.entrySet()) {
+            BigDecimal totalAmount = entry.getValue().stream()
+                    .map(Order::getTotalAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            result.put(entry.getKey(), totalAmount);
+        }
+
+        return result;
     }
+
+    private static String getMonthYear(Date date) {
+
+        return String.format("%d", date.getMonth()+1);
+    }
+    public Map<String, BigDecimal> calculateAmountByQuarter() {
+        List<Order> orders = orderRepository.findAll(); // Replace this with your actual query
+
+        Map<String, BigDecimal> quarterlyAmounts = new HashMap<>();
+
+        for (Order order : orders) {
+            String quarter = getQuarter(order.getOrderDate());
+            BigDecimal currentAmount = quarterlyAmounts.getOrDefault(quarter, BigDecimal.ZERO);
+            BigDecimal newAmount = currentAmount.add(order.getTotalAmount());
+            quarterlyAmounts.put(quarter, newAmount);
+        }
+
+        return quarterlyAmounts;
+    }
+
+    private String getQuarter(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int month = calendar.get(Calendar.MONTH);
+
+        if (month >= 0 && month <= 2) {
+            return "Q1";
+        } else if (month >= 3 && month <= 5) {
+            return "Q2";
+        } else if (month >= 6 && month <= 8) {
+            return "Q3";
+        } else {
+            return "Q4";
+        }
+    }
+
+
+
+
+
 }

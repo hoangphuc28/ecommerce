@@ -15,6 +15,7 @@
 <body>
 <div layout:fragment="content">
   <div class="breadcrumb-area">
+
     <!-- Top Breadcrumb Area -->
     <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
       <h2>Cart</h2>
@@ -32,6 +33,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <div th:if="${error != null}"class="alert alert-danger" role="alert">
+    <p th:text="${error}"></p>
   </div>
   <!-- ##### Breadcrumb Area End ##### -->
   <!-- ##### Cart Area Start ##### -->
@@ -88,6 +94,7 @@
               <button type="submit">APPLY COUPON</button>
             </form>
           </div>
+          <small th:if="${validCoupon != null and !validCoupon}" class="form-text text-danger">Coupon is expired</small>
         </div>
 
         <!-- Cart Totals -->

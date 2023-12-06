@@ -3,13 +3,16 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.model.*;
 import com.example.ecommerce.service.*;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -47,8 +50,18 @@ public class CheckOutController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
     @PostMapping("/checkout")
-    public String checkout(Model model, @RequestParam String total, @RequestParam String coupon) {
-        model.addAttribute("products", cartService.getCartItems());
+    public String checkout(Model model, @RequestParam String total, @RequestParam String coupon, RedirectAttributes redirectAttributes) {
+        var products = cartService.getCartItems();
+        for (var product : products) {
+            var p = productService.getProduct(product.getProduct().getId());
+            if(p.getQuantity() < product.getQuantity()) {
+                cartService.update(product.getProduct().getId(), p.getQuantity());
+                redirectAttributes.addFlashAttribute("error", "Sorry this product does not have enough quantity!");
+                return "redirect:/cart";
+            }
+
+        }
+        model.addAttribute("products", products);
         model.addAttribute("orderTotal", Double.parseDouble(total)+ship);
         model.addAttribute("coupon", Double.parseDouble(coupon));
         model.addAttribute("ship", ship);
@@ -56,7 +69,8 @@ public class CheckOutController {
         return "checkout/index";
     }
     @PostMapping("/checkout/confirm")
-    public String checkoutConfirm(@ModelAttribute("order") Order o, Principal principal) throws MessagingException, IOException {
+    public String checkoutConfirm(@Valid @ModelAttribute("order") Order o,
+                                  Principal principal) throws MessagingException, IOException {
         var products = cartService.getCartItems();
         PaymentMethod p = paymentMethodService.getPaymentMethodById(o.getPaymentMethod().getId());
         double total = 0;
@@ -74,7 +88,7 @@ public class CheckOutController {
             order.setCoupon(cartService.getAppliedCoupon());
             discountValue = cartService.getAppliedCoupon().getDiscount();
         }
-        order.setStatus(OrderStatus.DELIVERING);
+        order.setStatus(OrderStatus.CONFIRM_PENDING);
         orderService.createOrder(order);
         for (var product : products) {
             OrderProduct op = new OrderProduct();
@@ -92,7 +106,6 @@ public class CheckOutController {
         if(p.getId() == 1) {
             orderService.updateOrder(order.getId(), order);
             cartService.removeAll();
-            emailService.sendOrderDetail(c.getEmail(), "Order Tracking", order);
         } else {
             order.setStatus(OrderStatus.PAYMENT_PENDING);
             orderService.updateOrder(order.getId(), order);
@@ -101,7 +114,7 @@ public class CheckOutController {
             var url = (paypalService.getApproveLink(paypalService.createOrder(data)));
             return "redirect:"+url;
         }
-        return "Home/index";
+        return "checkout/success";
     }
     @GetMapping("/checkout/failed")
     private String failedPayment() {
