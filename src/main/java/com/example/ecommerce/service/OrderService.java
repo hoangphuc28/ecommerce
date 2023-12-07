@@ -1,6 +1,7 @@
 package com.example.ecommerce.service;
 
 import com.example.ecommerce.model.Order;
+import com.example.ecommerce.model.OrderStatus;
 import com.example.ecommerce.model.User;
 import com.example.ecommerce.repo.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,16 +66,13 @@ public class OrderService {
         var orders = orderRepository.findAll();
         Map<String, BigDecimal> result = new HashMap<>();
 
-        // Group orders by month
         Map<String, List<Order>> ordersByMonth = orders.stream()
                 .collect(Collectors.groupingBy(order -> getMonthYear(order.getOrderDate())));
 
-        // Calculate total amount for each month
         for (Map.Entry<String, List<Order>> entry : ordersByMonth.entrySet()) {
-            BigDecimal totalAmount = entry.getValue().stream()
+            BigDecimal totalAmount = entry.getValue().stream().filter(o -> o.getStatus() == OrderStatus.SHIPPED)
                     .map(Order::getTotalAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-
             result.put(entry.getKey(), totalAmount);
         }
 
@@ -91,10 +89,13 @@ public class OrderService {
         Map<String, BigDecimal> quarterlyAmounts = new HashMap<>();
 
         for (Order order : orders) {
-            String quarter = getQuarter(order.getOrderDate());
-            BigDecimal currentAmount = quarterlyAmounts.getOrDefault(quarter, BigDecimal.ZERO);
-            BigDecimal newAmount = currentAmount.add(order.getTotalAmount());
-            quarterlyAmounts.put(quarter, newAmount);
+            if(order.getStatus() == OrderStatus.SHIPPED) {
+                String quarter = getQuarter(order.getOrderDate());
+                BigDecimal currentAmount = quarterlyAmounts.getOrDefault(quarter, BigDecimal.ZERO);
+                BigDecimal newAmount = currentAmount.add(order.getTotalAmount());
+                quarterlyAmounts.put(quarter, newAmount);
+            }
+
         }
 
         return quarterlyAmounts;

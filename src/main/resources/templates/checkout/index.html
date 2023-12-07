@@ -163,14 +163,14 @@
 
           document.getElementById('nameError').innerHTML = 'Name is required';
         }
-
-        // Validate Email
         let email = document.getElementById('email_address').value;
-        document.getElementById('emailError').innerHTML = '';
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email format
         if (!email.trim()) {
-          check = false
-
+          check = false;
           document.getElementById('emailError').innerHTML = 'Email is required';
+        } else if (!emailRegex.test(email)) {
+          check = false;
+          document.getElementById('emailError').innerHTML = 'Invalid email format';
         }
 
         // Validate Address
@@ -182,18 +182,15 @@
           document.getElementById('addressError').innerHTML = 'Address is required';
         }
 
-        // // Validate Payment Method
-        // let paymentMethod = document.querySelector('input[name="order.paymentMethod.id"]:checked');
-        // document.getElementById('paymentMethodError').innerHTML = '';
-        // if (!paymentMethod) {
-        //   check = false
-        //
-        //   document.getElementById('paymentMethodError').innerHTML = 'Payment method is required';
-        // }
 
-        if(check)
+        if(!check) {
+          window.scrollTo({
+            top: 250,
+            behavior: 'smooth' // for smooth scrolling, use 'auto' or 'instant' for different behaviors
+          });
+          return ;
+        }
           document.getElementById('checkoutForm').submit();
-        else return;
       }
 
 
