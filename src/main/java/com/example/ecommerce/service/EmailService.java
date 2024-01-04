@@ -27,32 +27,18 @@ public class EmailService {
     public void sendEmail(String to, String subject, String text) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-        // Load the email template
-        String emailTemplate = getEmailTemplate("src/main/resources/templates/mail/verify.html");
-
-        // Replace placeholders in the template with the actual content
-        String processedTemplate = emailTemplate.replace("[[content]]", text);
-
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(processedTemplate, true);
+        helper.setText(verifyTemplate(text), true);
 
         mailSender.send(message);
     }
     public void sendOrderDetail(String to, String subject, Order order) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-        // Load the email template
-        String emailTemplate = getEmailTemplate("src/main/resources/templates/mail/order.html");
-
-        // Replace placeholders in the template with the actual content
-        String processedTemplate = emailTemplate.replace( "[[content]]",  order.getTotalAmount().toString());
-
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(processedTemplate, true);
+        helper.setText("Order Successfully!\nTotal: "+order.getTotalAmount().toString());
 
         mailSender.send(message);
     }
@@ -60,24 +46,65 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-        // Load the email template
-        String emailTemplate = getEmailTemplate("src/main/resources/templates/mail/cancelOrder.html");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String processedTemplate = emailTemplate
-                .replace( "[[Customer Name]]",  order.getCustomer().getName())
-                .replace( "[[Order Number]]",  order.getId().toString())
-                .replace( "[[Order Date]]",  dateFormat.format(order.getOrderDate()))
-                .replace( "[[Total Amount]]",  order.getTotalAmount().toString())
-                .replace( "[[Cancellation Reason]]",  order.getCancellationReason());
+
+
 
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(processedTemplate, true);
+        helper.setText(cancelOrderTemplate(order), true);
 
         mailSender.send(message);
     }
-    public String getEmailTemplate(String src) throws IOException {
-        Path path = Paths.get(src);
-        return Files.readString(path);
+
+    public String verifyTemplate(String content) {
+        return  String.format("<h1>Welcome to our Application</h1>%n" +
+                "<p>Click the button to verify account</p>%n" +
+                "<a href=\"http://localhost:8080/verify?token=%s\"%n" +
+                "   style=\"display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none;\">\n" +
+                "    Verify</a>", content);
+    }
+
+    public String cancelOrderTemplate(Order order) {
+        String emailTemplate = "<div class=\"container mt-4\">\n" +
+                "  <div class=\"jumbotron text-center\">\n" +
+                "    <h1 class=\"display-4\" style=\"color: #e74c3c;\">Order Cancellation Confirmation</h1>\n" +
+                "  </div>\n" +
+                "\n" +
+                "  <div class=\"card\">\n" +
+                "    <div class=\"card-body\">\n" +
+                "      <p class=\"card-text\">Dear %s,</p>\n" +
+                "      <p class=\"card-text\">We regret to inform you that your order has been canceled. Below are the details:</p>\n" +
+                "\n" +
+                "      <table class=\"table table-bordered\">\n" +
+                "        <tr>\n" +
+                "          <th scope=\"row\">Order Number:</th>\n" +
+                "          <td>%s</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "          <th scope=\"row\">Order Date:</th>\n" +
+                "          <td>%s</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "          <th scope=\"row\">Total Amount:</th>\n" +
+                "          <td>%s</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "          <th scope=\"row\">Cancellation Reason:</th>\n" +
+                "          <td>%s</td>\n" +
+                "        </tr>\n" +
+                "      </table>\n" +
+                "\n" +
+                "      <p class=\"card-text\">We apologize for any inconvenience caused. If you have any questions or concerns, please feel free to contact our customer support.</p>\n" +
+                "      <p class=\"card-text\">Thank you for choosing our service.</p>\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // Format the template with actual values
+        String formattedEmail = String.format(emailTemplate, order.getCustomer().getName(),
+                order.getId().toString(), dateFormat.format(order.getOrderDate()), order.getTotalAmount().toString(), order.getCancellationReason());
+
+        return formattedEmail;
     }
 }

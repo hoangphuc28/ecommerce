@@ -19,7 +19,7 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 20)
     private String code;
 
     @Column(nullable = false)
@@ -29,7 +29,6 @@ public class Coupon {
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date expirationDate;
-
 
     public boolean isValid() {
         Date currentDate = new Date();

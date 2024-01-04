@@ -62,7 +62,7 @@ public class AdminProductController {
         if(imageProduct != null && imageProduct.getSize() > 0)
         {
             try {
-                File saveFile = new ClassPathResource("src/main/resources/static/img").getFile();
+                File saveFile = new ClassPathResource("static/img").getFile();
                 String newImageFile = UUID.randomUUID() +  ".png";
                 Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + newImageFile);
                 Files.copy(imageProduct.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
